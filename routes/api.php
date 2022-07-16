@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\EmployeeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group([
+    "prefix" => "employee"
+], function() {
+    Route::get("/", [EmployeeController::class, "index"]);
+    Route::get("/{id}/show", [EmployeeController::class, "show"]);
+    Route::post("/store", [EmployeeController::class, "store"]);
+    Route::put("/{id}/update", [EmployeeController::class, "update"]);
+    Route::delete("/{id}/destroy", [EmployeeController::class, "destroy"]);
 });
