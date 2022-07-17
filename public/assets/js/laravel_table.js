@@ -80,14 +80,19 @@ class Laravel_table {
                     `
                 }
 
-                $(`nav .laravel-table_pagination`).remove()
+                $(`.laravel-table_pagination`).remove()
 
                 $(table).parent().parent().append(`
-                <nav aria-label="laravel-table_pagination">
-                    <ul class="pagination mt-2 laravel-table_pagination">
-                        ${ paginationItem }
-                    </ul>
-                </nav>
+                <div class="mt-2 d-flex justify-content-between laravel-table_pagination">
+                    <nav aria-label="laravel-table_pagination">
+                        <ul class="pagination">
+                            ${ paginationItem }
+                        </ul>
+                    </nav>
+                    <div class="table-info">
+                        Showing ${ data.from } to ${ data.total } of ${ data.per_page } per page
+                    </div>
+                </div>
                 `)
             }
         }).catch(err => {

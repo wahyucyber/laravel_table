@@ -19,3 +19,11 @@ table.laravel-table thead tr th i:nth-child(2),
 table.laravel-table tfoot tr th i:nth-child(2) {
     margin-top: -4px;
 }
+
+.laravel-table_pagination {
+    align-items: center;
+}
+
+.laravel-table_pagination .table-info {
+    font-size: 13px;
+}
