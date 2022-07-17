@@ -50,7 +50,7 @@ class EmployeeController extends Controller
             $employee->where("email", "LIKE", "%$email%");
         }
 
-        return Response::json($employee->paginate(10));
+        return Response::json($employee->paginate(1));
     }
 
     /**

@@ -54,10 +54,16 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js" integrity="sha512-xIPqqrfvUAc/Cspuj7Bq0UtHNo/5qkdyngx6Vwt+tmbvTLDszzXM0G6c91LXmGrRx8KEPulT+AfOOez+TeVylg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="{{ asset("") }}assets/js/laravel_table.js"></script>
     <script type="text/javascript">
-    let laravel_table = new Laravel_table(`http://localhost:8000/api/`)
+    laravel_table.init({
+        table: `table`,
+        baseUrl: `http://localhost:8000/api/`
+    })
 
-    laravel_table.init(`table`, {
+    laravel_table.run({
         url: `employee?page=1`,
+        // pagination: {
+        //     type: `simple`
+        // },
         columns: [
             {
                 data: "name"
@@ -69,7 +75,10 @@
                 data: "position"
             },
             {
-                data: "phone"
+                data: "phone",
+                html: e => {
+                    return `+${ e.phone }`
+                }
             },
             {
                 data: "address"

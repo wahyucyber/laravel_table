@@ -1,50 +1,32 @@
 class Laravel_table {
-    constructor(baseUrl) {
-        this.baseUrl = baseUrl
+    constructor() {
+        this.baseUrl
+        this.baseTable
+        this.columns
+        this.pagination
     }
 
-    init(table, params) {
+    init(params) {
+        this.baseUrl = params.baseUrl
+        this.baseTable = params.table
+    }
+
+    api(params) {
+        let table = this.baseTable
+
         let url = params.url || ``
         let method = params.method || `GET`
         let prm = params.params || ``
         let data = params.data || ``
-        let columns = params.columns || []
+        let columns = this.columns
+        let pagination = this.pagination
 
         let headers = params.headers || {
             'Accept': 'application/json'
         }
 
-        $(`${ table }`).addClass(`laravel-table`)
-
-        $.each($(`${ table } thead tr th, ${ table } tfoot tr th`).get(), function (index, value) {
-            let innerHTML = value.innerHTML
-
-            $(this).html(`<div class="d-flex flex-row justify-content-between align-items-center">${ innerHTML } <div class="d-flex flex-column p-0"><i class="d-block bi bi-caret-up"></i><i class="d-block bi bi-caret-down"></i></div></div>`)
-        })
-
-        $.each($(`${ table } thead tr th`).get(), function (index, value) {
-            let cellIndex = parseInt(value.cellIndex) + 1
-            let innerText = $(value).text()
-
-            let sort = true
-
-            $.each(columns, function (indexColumns, valueColumns) {
-                if ((valueColumns.sort == false || valueColumns.sort == "false") && indexColumns == index) {
-                    sort = false
-                }
-            })
-
-            $(this).attr(`data-sort`, sort)
-            $(`${ table } tfoot tr th:nth-child(${ cellIndex })`).attr(`data-sort`, sort)
-
-            if (sort == false) {
-                $(this).html(innerText)
-                $(`${ table } tfoot tr th:nth-child(${ cellIndex })`).html(innerText)
-            }
-        })
-
         axios({
-            url: url,
+            url: url.replace(this.baseUrl, ''),
             method: method,
             headers: headers,
             params: prm,
@@ -53,6 +35,7 @@ class Laravel_table {
             withCredentials: true
         }).then(e => {
             let data = e.data
+            let links = data.links
 
             if (data.data.length == 0) {
                 let lengthColumn = $(`${ table } thead tr th`).length
@@ -80,9 +63,104 @@ class Laravel_table {
                 })
 
                 $(`${ table } tbody`).html(tr)
+
+                let paginationItem = ``
+
+                if (pagination.type == "default") {
+                    $.each(links, function (index, value) {
+                        paginationItem += `<li class="page-item default ${ value.active ? `active` : `` } ${ value.url == null ? `disabled` : `` }" data-disabled="${ value.url == null ? `true` : `` }" data-active="${ value.active ? `true` : `false` }" data-url="${ value.url }"><a class="page-link" href="javascript:;">${ value.label }</a></li>`
+                    })
+                }else if(pagination.type == "simple") {
+                    paginationItem = `
+                        <li class="page-item simple ${ data.current_page == 1 ? `disabled` : `` }" data-disabled="${ data.current_page == 1 ? `true` : `` }" data-url="${ data.first_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-rewind"></i></a></li>
+                        <li class="page-item simple ${ data.current_page == 1 ? `disabled` : `` }" data-disabled="${ data.current_page == 1 ? `true` : `` }" data-url="${ data.prev_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-caret-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="javascript:;">${ data.current_page }</a></li>
+                        <li class="page-item simple ${ data.last_page == data.current_page ? `disabled` : `` }" data-disabled="${ data.last_page == data.current_page ? `true` : `` }" data-url="${ data.next_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-caret-right"></i></a></li>
+                        <li class="page-item simple ${ data.last_page == data.current_page ? `disabled` : `` }" data-disabled="${ data.last_page == data.current_page ? `true` : `` }" data-url="${ data.last_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-fast-forward"></i></a></li>
+                    `
+                }
+
+                $(`nav .laravel-table_pagination`).remove()
+
+                $(table).parent().parent().append(`
+                <nav aria-label="laravel-table_pagination">
+                    <ul class="pagination mt-2 laravel-table_pagination">
+                        ${ paginationItem }
+                    </ul>
+                </nav>
+                `)
             }
         }).catch(err => {
             console.log(err)
         });
     }
+
+    run(params) {
+        let table = this.baseTable
+
+        let columns = params.columns || []
+
+        this.columns = columns
+        this.pagination = params.pagination || {
+            'type': 'default'
+        }
+
+        $(`${ table }`).addClass(`laravel-table`)
+
+        $.each($(`${ table } thead tr th, ${ table } tfoot tr th`).get(), function (index, value) {
+            $(this).html(value.innerText)
+            let innerHTML = value.innerHTML
+
+            $(this).html(`<div class="d-flex flex-row justify-content-between align-items-center">${ innerHTML } <div class="d-flex flex-column p-0"><i class="d-block bi bi-caret-up"></i><i class="d-block bi bi-caret-down"></i></div></div>`)
+        })
+
+        $.each($(`${ table } thead tr th`).get(), function (index, value) {
+            let cellIndex = parseInt(value.cellIndex) + 1
+            let innerText = $(value).text()
+
+            let sort = true
+
+            $.each(columns, function (indexColumns, valueColumns) {
+                if ((valueColumns.sort == false || valueColumns.sort == "false") && indexColumns == index) {
+                    sort = false
+                }
+            })
+
+            $(this).attr(`data-sort`, sort)
+            $(`${ table } tfoot tr th:nth-child(${ cellIndex })`).attr(`data-sort`, sort)
+
+            if (sort == false) {
+                $(this).html(value.innerText)
+                $(this).html(innerText)
+                $(`${ table } tfoot tr th:nth-child(${ cellIndex })`).html(innerText)
+            }
+        })
+
+        laravel_table.api(params)
+    }
 }
+
+let laravel_table = new Laravel_table()
+
+$(document).on(`click`, `.laravel-table_pagination .page-item.default`, function() {
+    let url = $(this).data(`url`)
+    let active = $(this).data('active')
+    let disabled = $(this).data('disabled')
+
+    if (active == false && disabled == false) {
+        laravel_table.api({
+            url: url
+        })
+    }
+})
+
+$(document).on(`click`, `.laravel-table_pagination .page-item.simple`, function() {
+    let url = $(this).data(`url`)
+    let disabled = $(this).data('disabled')
+
+    if (disabled == false) {
+        laravel_table.api({
+            url: url
+        })
+    }
+})
