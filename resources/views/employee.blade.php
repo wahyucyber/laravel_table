@@ -55,15 +55,23 @@
     <script type="text/javascript" src="{{ asset("") }}assets/js/laravel_table.js"></script>
     <script type="text/javascript">
     laravel_table.init({
-        table: `table`,
         baseUrl: `http://localhost:8000/api/`
     })
 
-    laravel_table.run({
+    laravel_table.run("table", {
         url: `employee?page=1`,
         // pagination: {
         //     type: `simple`
         // },
+        limit: {
+            show: true,
+            data: [
+                10,
+                25,
+                50,
+                100
+            ]
+        },
         columns: [
             {
                 data: "name"

@@ -24,6 +24,8 @@ class EmployeeController extends Controller
         $address = $request->address;
         $email = $request->email;
 
+        $limit = $request->limit ? $request->limit : 10;
+
         $employee = Employee::latest();
 
         if ($name) {
@@ -50,7 +52,7 @@ class EmployeeController extends Controller
             $employee->where("email", "LIKE", "%$email%");
         }
 
-        return Response::json($employee->paginate(1));
+        return Response::json($employee->paginate($limit));
     }
 
     /**

@@ -1,29 +1,33 @@
 class Laravel_table {
     constructor() {
         this.baseUrl
+        this.url
+        this.method
+        this.params
+        this.data
+        this.headers
+
         this.baseTable
         this.columns
         this.pagination
+        this.limit
     }
 
     init(params) {
         this.baseUrl = params.baseUrl
-        this.baseTable = params.table
     }
 
-    api(params) {
+    api() {
         let table = this.baseTable
 
-        let url = params.url || ``
-        let method = params.method || `GET`
-        let prm = params.params || ``
-        let data = params.data || ``
+        let url = this.url
+        let method = this.method
+        let prm = this.params
+        let data = this.data
         let columns = this.columns
         let pagination = this.pagination
 
-        let headers = params.headers || {
-            'Accept': 'application/json'
-        }
+        let headers = this.headers
 
         axios({
             url: url.replace(this.baseUrl, ''),
@@ -100,14 +104,28 @@ class Laravel_table {
         });
     }
 
-    run(params) {
-        let table = this.baseTable
+    run(table, params) {
+        this.baseTable = table
 
         let columns = params.columns || []
+        let limit = params.limit || {
+            show: true,
+            data: [10,25,50,100]
+        }
 
         this.columns = columns
         this.pagination = params.pagination || {
             'type': 'default'
+        }
+        this.limit = params.limit
+        this.url = params.url || ``
+        this.method = params.method || `GET`
+        this.params = params.params || {
+            limit: this.limit.data[0]
+        }
+        this.data = params.data || {}
+        this.headers = params.headers || {
+            'Accept': 'application/json'
         }
 
         $(`${ table }`).addClass(`laravel-table`)
@@ -141,6 +159,30 @@ class Laravel_table {
             }
         })
 
+        let limitContentOption = ``
+
+        $.each(limit.data, function (index, value) {
+            limitContentOption += `<option value="${ value }">${ value }</option>`
+        })
+
+        let limitContent = limit.show == true ? `<select class="form-select laravel-table_limit">${ limitContentOption }</select>` : ``
+
+        $(table).parent().parent().prepend(`
+            <div class="d-flex justify-content-between mb-2">
+                <div>${ limitContent }</div>
+                <div class="w-25">
+                    <form class="laravel-table_search">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="search" class="form-control" placeholder="Search" />
+                                <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `)
+
         laravel_table.api(params)
     }
 }
@@ -168,4 +210,10 @@ $(document).on(`click`, `.laravel-table_pagination .page-item.simple`, function(
             url: url
         })
     }
+})
+
+$(document).on("change", ".laravel-table_limit", function() {
+    laravel_table.params['limit'] = $(this).val()
+
+    laravel_table.api()
 })
