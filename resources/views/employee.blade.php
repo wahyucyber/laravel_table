@@ -19,13 +19,13 @@
                             <table class="table table-hover table-striped table-condensed table-borderless">
                                 <thead>
                                     <tr>
-                                        {{-- <th rowspan="2">Name</th>
-                                        <th rowspan="2">Gender</th> --}}
-                                        {{-- <th colspan="3">Test</th> --}}
+                                        <th rowspan="2">Name</th>
+                                        <th rowspan="2">Gender</th>
+                                        <th colspan="3">Test</th>
                                     </tr>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Gender</th>
+                                        {{-- <th>Name</th>
+                                        <th>Gender</th> --}}
                                         <th>Position</th>
                                         <th>Phone</th>
                                         <th>Address</th>

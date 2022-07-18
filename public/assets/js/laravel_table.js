@@ -86,8 +86,6 @@ class Laravel_table {
 
                 $(`.laravel-table_pagination`).remove()
 
-                console.log(pagination)
-
                 if (pagination.show == true) {
                 $(table).parent().parent().append(`
                     <div class="mt-2 d-flex justify-content-between laravel-table_pagination">
@@ -257,7 +255,6 @@ $(document).on("submit", "form.laravel-table_search", function(e) {
 
 $(document).on("keyup", `form.laravel-table_search input`, function() {
     if ($(this).val() == "") {
-        console.log('test')
         laravel_table.setParams({
             search: ``
         })
@@ -279,12 +276,19 @@ $(document).on(`click`, `table thead tr th[data-sort][data-index]:not([colspan])
         dir = `ASC`
     }
 
+    $(`table.laravel-table thead tr th i.bi-caret-up-fill`).removeClass(`bi-caret-up-fill`).addClass(`bi-caret-up`)
+    $(`table.laravel-table thead tr th i.bi-caret-down-fill`).removeClass(`bi-caret-down-fill`).addClass(`bi-caret-down`)
+
+    if (dir == 'ASC') {
+        $(`table.laravel-table thead tr th[data-index='${ $(this).data('index') }'] i.bi-caret-up`).removeClass(`bi-caret-up`).addClass(`bi-caret-up-fill`)
+    }else {
+        $(`table.laravel-table thead tr th[data-index='${ $(this).data('index') }'] i.bi-caret-down`).removeClass(`bi-caret-down`).addClass(`bi-caret-down-fill`)
+    }
+
     laravel_table.setParams({
         sort: sort,
         dir: dir
     })
-
-    console.log(dir)
 
     laravel_table.api()
 })

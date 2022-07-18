@@ -29,6 +29,15 @@ table.laravel-table tfoot tr th i:nth-child(2) {
     margin-top: -4px;
 }
 
+table.laravel-table thead tr th i {
+    color: #c7c8c9;
+}
+
+table.laravel-table thead tr th i.bi-caret-up-fill,
+table.laravel-table thead tr th i.bi-caret-down-fill {
+    color: #757575;
+}
+
 .laravel-table_pagination {
     align-items: center;
 }
