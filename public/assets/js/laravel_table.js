@@ -144,14 +144,14 @@ class Laravel_table {
 
         $(`${ table }`).addClass(`laravel-table`)
 
-        $.each($(`${ table } thead tr th, ${ table } tfoot tr th`).get(), function (index, value) {
+        $.each($(`${ table } thead tr th:not([colspan])`).get(), function (index, value) {
             $(this).html(value.innerText)
             let innerHTML = value.innerHTML
 
-            $(this).html(`<div class="d-flex flex-row justify-content-between align-items-center">${ innerHTML } <div class="d-flex flex-column p-0"><i class="d-block bi bi-caret-up"></i><i class="d-block bi bi-caret-down"></i></div></div>`)
+            $(this).html(`<div class="d-flex flex-row justify-content-between align-items-center" style="vertical-align: baseline;">${ innerHTML } <div class="d-flex flex-column p-0"><i class="d-block bi bi-caret-up"></i><i class="d-block bi bi-caret-down"></i></div></div>`).attr(`style`, `vertical-align: bottom; text-align: center;`).attr(`data-index`, index)
         })
 
-        $.each($(`${ table } thead tr th`).get(), function (index, value) {
+        $.each($(`${ table } thead tr th:not([colspan])`).get(), function (index, value) {
             let cellIndex = parseInt(value.cellIndex) + 1
             let innerText = $(value).text()
 
@@ -164,12 +164,9 @@ class Laravel_table {
             })
 
             $(this).attr(`data-sort`, sort)
-            $(`${ table } tfoot tr th:nth-child(${ cellIndex })`).attr(`data-sort`, sort)
 
             if (sort == false) {
-                $(this).html(value.innerText)
-                $(this).html(innerText)
-                $(`${ table } tfoot tr th:nth-child(${ cellIndex })`).html(innerText)
+                $(this).html(innerText).attr(`style`, `vertical-align: middle;`).removeAttr(`data-index`)
             }
         })
 
@@ -261,4 +258,29 @@ $(document).on("keyup", `form.laravel-table_search input`, function() {
             search: ``
         })
     }
+})
+
+$(document).on(`click`, `table thead tr th[data-sort][data-index]:not([colspan])`, function(e) {
+    let columns = laravel_table.columns
+    let params = laravel_table.params
+
+    let sort = columns[$(this).data(`index`)]['data']
+
+    let sort_old = params.sort ? params.sort : ``
+    let dir = params.dir ? params.dir : `ASC`
+
+    if (sort_old == sort) {
+        dir = dir == `DESC` ? `ASC` : `DESC`
+    }else {
+        dir = `ASC`
+    }
+
+    laravel_table.setParams({
+        sort: sort,
+        dir: dir
+    })
+
+    console.log(dir)
+
+    laravel_table.api()
 })

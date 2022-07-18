@@ -24,9 +24,18 @@ class EmployeeController extends Controller
         $address = $request->address;
         $email = $request->email;
 
+        $sort = $request->sort;
+        $dir = $request->dir;
+
         $limit = $request->limit ? $request->limit : 10;
 
-        $employee = Employee::latest();
+        $employee = Employee::whereNotNull('id');
+
+        if ($sort && $dir) {
+            $employee->orderBy($sort, $dir);
+        }else {
+            $employee->latest();
+        }
 
         if ($name) {
             $employee->where("name", "LIKE", "%$name%");

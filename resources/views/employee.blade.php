@@ -19,8 +19,11 @@
                             <table class="table table-hover table-striped table-condensed table-borderless">
                                 <thead>
                                     <tr>
-                                        <th>Name</th>
-                                        <th>Gender</th>
+                                        <th rowspan="2">Name</th>
+                                        <th rowspan="2">Gender</th>
+                                        <th colspan="3">Test</th>
+                                    </tr>
+                                    <tr>
                                         <th>Position</th>
                                         <th>Phone</th>
                                         <th>Address</th>
