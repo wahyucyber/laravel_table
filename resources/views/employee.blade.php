@@ -19,11 +19,13 @@
                             <table class="table table-hover table-striped table-condensed table-borderless">
                                 <thead>
                                     <tr>
-                                        <th rowspan="2">Name</th>
-                                        <th rowspan="2">Gender</th>
-                                        <th colspan="3">Test</th>
+                                        {{-- <th rowspan="2">Name</th>
+                                        <th rowspan="2">Gender</th> --}}
+                                        {{-- <th colspan="3">Test</th> --}}
                                     </tr>
                                     <tr>
+                                        <th>Name</th>
+                                        <th>Gender</th>
                                         <th>Position</th>
                                         <th>Phone</th>
                                         <th>Address</th>
@@ -63,23 +65,24 @@
 
     laravel_table.run("table", {
         url: `employee?page=1`,
-        // pagination: {
-        //     type: `simple`
-        // },
-        limit: {
-            show: true,
-            data: [
+        pagination: { // optional
+            show: true, // true or false
+            type: `default` // default or simple
+        },
+        limit: { // optional
+            show: true, // true or false
+            data: [ // array of limit data
                 10,
                 25,
                 50,
                 100
             ]
         },
-        // search: {
-        //     show: true,
-        //     placeholder: `Search name...`
-        // },
-        columns: [
+        search: { // optional
+            show: true, // true or false
+            placeholder: `Search name...` // optional
+        },
+        columns: [ // required
             {
                 data: "name"
             },
@@ -90,8 +93,8 @@
                 data: "position"
             },
             {
-                data: "phone",
-                html: e => {
+                data: "phone", // initialize key of API
+                html: e => { // custom output
                     return `+${ e.phone }`
                 }
             },
@@ -103,7 +106,7 @@
             },
             {
                 data: null,
-                sort: false,
+                sort: false, // optional, true or false
                 html: e => {
                     return `
                     <div class="btn-group">

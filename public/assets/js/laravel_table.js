@@ -86,18 +86,21 @@ class Laravel_table {
 
                 $(`.laravel-table_pagination`).remove()
 
+                console.log(pagination)
+
+                if (pagination.show == true) {
                 $(table).parent().parent().append(`
-                <div class="mt-2 d-flex justify-content-between laravel-table_pagination">
-                    <nav aria-label="laravel-table_pagination">
-                        <ul class="pagination">
-                            ${ paginationItem }
-                        </ul>
-                    </nav>
-                    <div class="table-info">
-                        Showing ${ data.from } to ${ data.total } of ${ data.per_page } per page
-                    </div>
-                </div>
-                `)
+                    <div class="mt-2 d-flex justify-content-between laravel-table_pagination">
+                        <nav aria-label="laravel-table_pagination">
+                            <ul class="pagination">
+                                ${ paginationItem }
+                            </ul>
+                        </nav>
+                        <div class="table-info">
+                            Showing ${ data.from } to ${ data.total } of ${ data.per_page } per page
+                        </div>
+                    </div>`)
+                }
             }
         }).catch(err => {
             console.log(err)
@@ -119,7 +122,8 @@ class Laravel_table {
 
         this.columns = columns
         this.pagination = params.pagination || {
-            'type': 'default'
+            show: true,
+            type: 'default'
         }
         this.limit = limit
         this.url = params.url || ``
