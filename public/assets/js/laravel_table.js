@@ -207,10 +207,6 @@ class Laravel_table {
             ...params
         }
     }
-
-    getSearchParams() {
-        return this.search
-    }
 }
 
 let laravel_table = new Laravel_table()
