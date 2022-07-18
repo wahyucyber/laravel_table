@@ -17,7 +17,7 @@ class EmployeeController extends Controller
      */
     public function index(Request $request)
     {
-        $name = $request->name;
+        $name = $request->search;
         $gender = $request->gender;
         $position = $request->position;
         $phone = $request->phone;

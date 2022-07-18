@@ -72,6 +72,10 @@
                 100
             ]
         },
+        // search: {
+        //     show: true,
+        //     placeholder: `Search name...`
+        // },
         columns: [
             {
                 data: "name"

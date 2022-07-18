@@ -112,17 +112,31 @@ class Laravel_table {
             show: true,
             data: [10,25,50,100]
         }
+        let search = params.search || {
+            show: true,
+            placeholder: `Search`
+        }
 
         this.columns = columns
         this.pagination = params.pagination || {
             'type': 'default'
         }
-        this.limit = params.limit
+        this.limit = limit
         this.url = params.url || ``
         this.method = params.method || `GET`
-        this.params = params.params || {
-            limit: this.limit.data[0]
+
+        this.params = {}
+
+        this.params['limit'] = this.limit.data[0]
+        this.params[`search`] = $(`form.laravel-table_search input`).val()
+
+        if (params.params) {
+            this.params = {
+                ...this.params,
+                ...params.params
+            }
         }
+
         this.data = params.data || {}
         this.headers = params.headers || {
             'Accept': 'application/json'
@@ -167,23 +181,35 @@ class Laravel_table {
 
         let limitContent = limit.show == true ? `<select class="form-select laravel-table_limit">${ limitContentOption }</select>` : ``
 
+        let searchForm = search.show == true ? `
+        <form class="laravel-table_search">
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" name="search" id="search" autocomplete="off" class="form-control search" placeholder="${ search.placeholder }" />
+                    <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
+                </div>
+            </div>
+        </form>` : ``
+
         $(table).parent().parent().prepend(`
             <div class="d-flex justify-content-between mb-2">
                 <div>${ limitContent }</div>
-                <div class="w-25">
-                    <form class="laravel-table_search">
-                        <div class="form-group">
-                            <div class="input-group">
-                                <input type="search" class="form-control" placeholder="Search" />
-                                <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                <div class="w-25">${ searchForm }</div>
             </div>
         `)
 
         laravel_table.api(params)
+    }
+
+    setParams(params) {
+        this.params = {
+            ...this.params,
+            ...params
+        }
+    }
+
+    getSearchParams() {
+        return this.search
     }
 }
 
@@ -213,7 +239,30 @@ $(document).on(`click`, `.laravel-table_pagination .page-item.simple`, function(
 })
 
 $(document).on("change", ".laravel-table_limit", function() {
-    laravel_table.params['limit'] = $(this).val()
+    laravel_table.setParams({
+        limit: $(this).val()
+    })
 
     laravel_table.api()
+})
+
+$(document).on("submit", "form.laravel-table_search", function(e) {
+    e.preventDefault()
+
+    let search = $(`form.laravel-table_search input`).val()
+
+    laravel_table.setParams({
+        search: search
+    })
+
+    laravel_table.api()
+})
+
+$(document).on("keyup", `form.laravel-table_search input`, function() {
+    if ($(this).val() == "") {
+        console.log('test')
+        laravel_table.setParams({
+            search: ``
+        })
+    }
 })
