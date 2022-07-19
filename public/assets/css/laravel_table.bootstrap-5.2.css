@@ -99,5 +99,6 @@ div.laravel-table_loading img {
     .laravel-table_pagination {
         display: flex;
         flex-direction: row;
+        align-content: center;
     }
 }
