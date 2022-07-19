@@ -175,7 +175,7 @@
 
         laravel_table.setParams(newParams)
 
-        laravel_table.api()
+        laravel_table.refresh()
     })
 
     $(document).on(`click`, `form.submit-filter button[type=button]`, function() {
@@ -191,7 +191,7 @@
 
         laravel_table.setParams(newParams)
 
-        laravel_table.api()
+        laravel_table.refresh()
 
         $(`form.submit-filter button[type=submit]`).trigger(`click`)
     })

@@ -206,6 +206,10 @@ class Laravel_table {
             ...params
         }
     }
+
+    refresh() {
+        laravel_table.api()
+    }
 }
 
 let laravel_table = new Laravel_table()
