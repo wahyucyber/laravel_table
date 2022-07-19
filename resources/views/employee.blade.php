@@ -67,7 +67,7 @@
                                             <tr>
                                                 <th rowspan="2">Name</th>
                                                 <th rowspan="2">Gender</th>
-                                                <th colspan="3">Test</th>
+                                                <th colspan="3">Other Information</th>
                                             </tr>
                                             <tr>
                                                 {{-- <th>Name</th>
