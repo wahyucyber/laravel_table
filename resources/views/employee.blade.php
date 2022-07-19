@@ -108,6 +108,9 @@
 
     laravel_table.run("table", {
         url: `employee?page=1`,
+        // loading: {
+        //     show: false // true or false
+        // },
         pagination: { // optional
             show: true, // true or false
             type: `default` // default or simple

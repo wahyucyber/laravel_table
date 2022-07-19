@@ -10,6 +10,7 @@ class Laravel_table {
         this.baseTable
         this.columns
         this.pagination
+        this.loading
         this.limit
     }
 
@@ -26,8 +27,17 @@ class Laravel_table {
         let data = this.data
         let columns = this.columns
         let pagination = this.pagination
+        let loading = this.loading
 
         let headers = this.headers
+
+        if (loading.show == true) {
+            $(`.laravel-table_responsive`).append(`
+                <div class="laravel-table_loading">
+                    <img src="./assets/img/loading.gif" alt="Loading image">
+                </div>
+            `)
+        }
 
         axios({
             url: url.replace(this.baseUrl, ''),
@@ -100,8 +110,16 @@ class Laravel_table {
                     </div>`)
                 }
             }
+
+            if (loading.show == true) {
+                $(`.laravel-table_responsive .laravel-table_loading`).remove()
+            }
         }).catch(err => {
             console.log(err)
+
+            if (loading.show == true) {
+                $(`.laravel-table_responsive .laravel-table_loading`).remove()
+            }
         });
     }
 
@@ -123,11 +141,16 @@ class Laravel_table {
             show: true,
             type: 'default'
         }
+        this.loading = params.loading || {
+            show: true
+        }
         this.limit = limit
         this.url = params.url || ``
         this.method = params.method || `GET`
 
         this.params = {}
+
+        // console.log(params.loading)
 
         this.params['limit'] = this.limit.data[0]
         this.params[`search`] = $(`form.laravel-table_search input`).val()
@@ -145,6 +168,8 @@ class Laravel_table {
         }
 
         $(`${ table }`).addClass(`laravel-table`)
+
+        $($(`${ table }`).parent()[0]).addClass(`laravel-table_responsive`)
 
         $.each($(`${ table } thead tr th:not([colspan])`).get(), function (index, value) {
             $(this).html(value.innerText)
