@@ -65,7 +65,7 @@ div.laravel-table_loading img {
     height: 90px;
 }
 
-@media ( min-width: 576px ) {
+@media screen and ( min-width: 576px ) {
     .laravel-table_filter {
         display: flex;
         flex-direction: column;
@@ -82,7 +82,7 @@ div.laravel-table_loading img {
     }
 }
 
-@media ( min-width: 768px ) {
+@media screen and ( min-width: 768px ) {
     .laravel-table_filter {
         display: flex;
         flex-direction: row;
@@ -94,6 +94,27 @@ div.laravel-table_loading img {
 
     .laravel-table_filter > div:nth-child(2) {
         width: 30% !important;
+    }
+
+    .laravel-table_pagination {
+        display: flex;
+        flex-direction: row;
+        align-content: center;
+    }
+}
+
+@media screen and ( min-width: 992px) {
+    .laravel-table_filter {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .laravel-table_filter > div {
+        width: auto !important;
+    }
+
+    .laravel-table_filter > div:nth-child(2) {
+        width: 25% !important;
     }
 
     .laravel-table_pagination {
