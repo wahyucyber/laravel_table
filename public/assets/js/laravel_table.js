@@ -115,7 +115,14 @@ class Laravel_table {
                 $(`.laravel-table_responsive .laravel-table_loading`).remove()
             }
         }).catch(err => {
-            console.log(err)
+            let status = err.response.status
+            let statusText = err.response.statusText
+
+            $(`${ table } tbody`).html(`
+                <tr>
+                    <td align="center" colspan="${ columns.length }"><b>${ status }</b> ${ statusText }.</td>
+                </tr>
+            `)
 
             if (loading.show == true) {
                 $(`.laravel-table_responsive .laravel-table_loading`).remove()
