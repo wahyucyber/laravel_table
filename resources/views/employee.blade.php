@@ -108,7 +108,7 @@
     <script type="text/javascript" src="{{ asset("") }}assets/js/laravel_table.js"></script>
     <script type="text/javascript">
     laravel_table.init({
-        baseUrl: `http://localhost:8000/api/`
+        baseUrl: `http://localhost:8000/api/` // Set baseUrl global
     })
 
     laravel_table.run("table", {
