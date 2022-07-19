@@ -119,7 +119,7 @@
         },
         data: {}, // Optional or custom data
         loading: {
-            show: false // true or false
+            show: true // true or false
         },
         params: {}, // Optional or custom params
         customClass: `table-sm`,
