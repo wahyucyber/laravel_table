@@ -100,7 +100,7 @@ class Laravel_table {
                 $(table).parent().parent().append(`
                     <div class="mt-2 d-flex justify-content-between laravel-table_pagination">
                         <nav aria-label="laravel-table_pagination">
-                            <ul class="pagination">
+                            <ul class="pagination ${ pagination.customClass }">
                                 ${ paginationItem }
                             </ul>
                         </nav>
@@ -136,17 +136,22 @@ class Laravel_table {
         let columns = params.columns || []
         let limit = params.limit || {
             show: true,
-            data: [10,25,50,100]
+            data: [10,25,50,100],
+            customClass: ``
         }
         let search = params.search || {
             show: true,
-            placeholder: `Search`
+            placeholder: `Search`,
+            customClass: ``
         }
+
+        let customClass = params.customClass
 
         this.columns = columns
         this.pagination = params.pagination || {
             show: true,
-            type: 'default'
+            type: 'default',
+            customClass: ``
         }
         this.loading = params.loading || {
             show: true
@@ -174,7 +179,7 @@ class Laravel_table {
             'Accept': 'application/json'
         }
 
-        $(`${ table }`).addClass(`laravel-table`)
+        $(`${ table }`).addClass(`laravel-table ${ customClass }`)
 
         $($(`${ table }`).parent()[0]).addClass(`laravel-table_responsive`)
 
@@ -209,12 +214,12 @@ class Laravel_table {
             limitContentOption += `<option value="${ value }">${ value }</option>`
         })
 
-        let limitContent = limit.show == true ? `<select class="form-select laravel-table_limit">${ limitContentOption }</select>` : ``
+        let limitContent = limit.show == true ? `<select class="form-select laravel-table_limit ${ limit.customClass }">${ limitContentOption }</select>` : ``
 
         let searchForm = search.show == true ? `
         <form class="laravel-table_search">
             <div class="form-group">
-                <div class="input-group">
+                <div class="input-group ${ search.customClass }">
                     <input type="text" name="search" id="search" autocomplete="off" class="form-control search" placeholder="${ search.placeholder }" />
                     <button type="submit" class="btn btn-outline-secondary"><i class="bi bi-search"></i></button>
                 </div>

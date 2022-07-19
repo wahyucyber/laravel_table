@@ -116,9 +116,11 @@
         // loading: {
         //     show: false // true or false
         // },
+        customClass: `table-sm`,
         pagination: { // optional
             show: true, // true or false
-            type: `default` // default or simple
+            type: `default`, // default or simple
+            customClass: `pagination-sm`
         },
         limit: { // optional
             show: true, // true or false
@@ -127,11 +129,13 @@
                 25,
                 50,
                 100
-            ]
+            ],
+            customClass: `form-select-sm`
         },
         search: { // optional
             show: true, // true or false
-            placeholder: `Search name...` // optional
+            placeholder: `Search name...`, // optional
+            customClass: `input-group-sm`
         },
         columns: [ // required
             {
