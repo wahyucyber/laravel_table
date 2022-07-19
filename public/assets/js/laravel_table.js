@@ -162,8 +162,6 @@ class Laravel_table {
 
         this.params = {}
 
-        // console.log(params.loading)
-
         this.params['limit'] = this.limit.data[0]
         this.params[`search`] = $(`form.laravel-table_search input`).val()
 
