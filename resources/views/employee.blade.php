@@ -15,38 +15,81 @@
             <div class="col-lg-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover table-striped table-condensed table-borderless">
-                                <thead>
-                                    <tr>
-                                        <th rowspan="2">Name</th>
-                                        <th rowspan="2">Gender</th>
-                                        <th colspan="3">Test</th>
-                                    </tr>
-                                    <tr>
-                                        {{-- <th>Name</th>
-                                        <th>Gender</th> --}}
-                                        <th>Position</th>
-                                        <th>Phone</th>
-                                        <th>Address</th>
-                                        <th>Email</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                </tbody>
-                                <tfoot>
-                                    <tr>
-                                        <th>Name</th>
-                                        <th>Gender</th>
-                                        <th>Position</th>
-                                        <th>Phone</th>
-                                        <th>Address</th>
-                                        <th>Email</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </tfoot>
-                            </table>
+                        <form class="submit-filter">
+                            <div class="row mb-3">
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <select name="gender" id="gender" class="form-select gender">
+                                            <option value="">Gender</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <input type="text" name="position" id="position" class="form-control position" placeholder="Position" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <input type="text" name="phone" id="phone" class="form-control phone" placeholder="Phone" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <input type="text" name="address" id="address" class="form-control address" placeholder="Address" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2">
+                                    <div class="form-group">
+                                        <input type="text" name="email" id="email" class="form-control email" placeholder="Email" autocomplete="off">
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 mt-2">
+                                    <div class="btn-group">
+                                        <button type="submit" class="btn btn-success btn-filter_submit"><i class="bi bi-filter"></i> Filter</button>
+                                        <button type="button" class="btn btn-warning btn-filter_reset"><i class="bi bi-x"></i> Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="table-responsive">
+                                    <table class="table table-hover table-striped table-condensed table-borderless">
+                                        <thead>
+                                            <tr>
+                                                <th rowspan="2">Name</th>
+                                                <th rowspan="2">Gender</th>
+                                                <th colspan="3">Test</th>
+                                            </tr>
+                                            <tr>
+                                                {{-- <th>Name</th>
+                                                <th>Gender</th> --}}
+                                                <th>Position</th>
+                                                <th>Phone</th>
+                                                <th>Address</th>
+                                                <th>Email</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Name</th>
+                                                <th>Gender</th>
+                                                <th>Position</th>
+                                                <th>Phone</th>
+                                                <th>Address</th>
+                                                <th>Email</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -117,6 +160,40 @@
                 }
             }
         ]
+    })
+
+    $(document).on(`submit`, `form.submit-filter`, function(e) {
+        e.preventDefault()
+
+        let form = $(this).serializeArray()
+
+        let newParams = []
+
+        $.each(form, function (index, value) {
+            newParams[value.name] = value.value
+        })
+
+        laravel_table.setParams(newParams)
+
+        laravel_table.api()
+    })
+
+    $(document).on(`click`, `form.submit-filter button[type=button]`, function() {
+        let form = $(`form.submit-filter`).serializeArray()
+
+        let newParams = []
+
+        $.each(form, function (index, value) {
+            $(`form.submit-filter select[name="${ value.name }"]`).val(``).trigger(`change`)
+            $(`form.submit-filter input[name="${ value.name }"]`).val(``)
+            newParams[value.name] = ``
+        })
+
+        laravel_table.setParams(newParams)
+
+        laravel_table.api()
+
+        $(`form.submit-filter button[type=submit]`).trigger(`click`)
     })
     </script>
 </body>
