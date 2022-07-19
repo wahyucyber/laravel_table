@@ -19,6 +19,7 @@
                             <div class="row mb-3">
                                 <div class="col-lg-2">
                                     <div class="form-group">
+                                        <label for="gender" class="form-label">Gender</label>
                                         <select name="gender" id="gender" class="form-select gender">
                                             <option value="">Gender</option>
                                             <option value="Male">Male</option>
@@ -28,21 +29,25 @@
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
+                                        <label for="position" class="form-label">Position</label>
                                         <input type="text" name="position" id="position" class="form-control position" placeholder="Position" autocomplete="off">
                                     </div>
                                 </div>
                                 <div class="col-lg-2">
                                     <div class="form-group">
+                                        <label for="phone" class="form-label">Phone</label>
                                         <input type="text" name="phone" id="phone" class="form-control phone" placeholder="Phone" autocomplete="off">
                                     </div>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-3">
                                     <div class="form-group">
+                                        <label for="address" class="form-label">Address</label>
                                         <input type="text" name="address" id="address" class="form-control address" placeholder="Address" autocomplete="off">
                                     </div>
                                 </div>
-                                <div class="col-lg-2">
+                                <div class="col-lg-3">
                                     <div class="form-group">
+                                        <label for="email" class="form-label">Email</label>
                                         <input type="text" name="email" id="email" class="form-control email" placeholder="Email" autocomplete="off">
                                     </div>
                                 </div>
