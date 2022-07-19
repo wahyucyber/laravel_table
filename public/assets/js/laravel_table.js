@@ -154,7 +154,6 @@ class Laravel_table {
         })
 
         $.each($(`${ table } thead tr th:not([colspan])`).get(), function (index, value) {
-            let cellIndex = parseInt(value.cellIndex) + 1
             let innerText = $(value).text()
 
             let sort = true
