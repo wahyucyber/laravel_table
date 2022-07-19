@@ -113,9 +113,15 @@
 
     laravel_table.run("table", {
         url: `employee?page=1`,
-        // loading: {
-        //     show: false // true or false
-        // },
+        method:`GET`, // Optional, defualt = GET
+        headers: { // Optional or custom headers
+            "Accept": "application/json"
+        },
+        data: {}, // Optional or custom data
+        loading: {
+            show: false // true or false
+        },
+        params: {}, // Optional or custom params
         customClass: `table-sm`,
         pagination: { // optional
             show: true, // true or false
