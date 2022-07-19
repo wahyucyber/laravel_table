@@ -215,7 +215,7 @@ class Laravel_table {
         </form>` : ``
 
         $(table).parent().parent().prepend(`
-            <div class="d-flex justify-content-between mb-2">
+            <div class="d-flex justify-content-between mb-2 laravel-table_filter">
                 <div>${ limitContent }</div>
                 <div class="w-25">${ searchForm }</div>
             </div>

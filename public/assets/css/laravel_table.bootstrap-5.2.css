@@ -62,5 +62,42 @@ div.laravel-table_loading {
 }
 
 div.laravel-table_loading img {
-    height: 80px;
+    height: 90px;
+}
+
+@media ( min-width: 576px ) {
+    .laravel-table_filter {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .laravel-table_filter > div {
+        width: 100% !important;
+    }
+
+    .laravel-table_pagination {
+        display: flex;
+        flex-direction: column;
+    }
+}
+
+@media ( min-width: 768px ) {
+    .laravel-table_filter {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .laravel-table_filter > div {
+        width: auto !important;
+    }
+
+    .laravel-table_filter > div:nth-child(2) {
+        width: 30% !important;
+    }
+
+    .laravel-table_pagination {
+        display: flex;
+        flex-direction: row;
+    }
 }
