@@ -114,7 +114,7 @@ div.laravel-table_loading img {
     }
 
     .laravel-table_filter > div:nth-child(2) {
-        width: 25% !important;
+        width: 20% !important;
     }
 
     .laravel-table_pagination {
