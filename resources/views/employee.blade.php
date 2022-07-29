@@ -62,7 +62,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="table-responsive">
-                                    <table class="table table-hover table-striped table-condensed table-borderless">
+                                    <table class="table table-hover table-striped table-condensed table-borderless" id="employee">
                                         <thead>
                                             <tr>
                                                 <th rowspan="2">Name</th>
@@ -102,117 +102,222 @@
         </div>
     </div>
 
+    <div id="test"></div>
+    <div id="test2"></div>
+
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js" integrity="sha512-xIPqqrfvUAc/Cspuj7Bq0UtHNo/5qkdyngx6Vwt+tmbvTLDszzXM0G6c91LXmGrRx8KEPulT+AfOOez+TeVylg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="{{ asset("") }}assets/js/laravel_table.js"></script>
     <script type="text/javascript">
-    laravel_table.init({
-        baseUrl: `http://localhost:8000/api/` // Set baseUrl global
-    })
+    var baseURL = `http://localhost:8000/api/`
+    // laravel_table.init({
+    //     baseUrl: `http://localhost:8000/api/` // Set baseUrl global
+    // })
 
-    laravel_table.run("table", {
-        url: `employee?page=1`,
-        method:`GET`, // Optional, defualt = GET
-        headers: { // Optional or custom headers
-            "Accept": "application/json"
-        },
-        data: {}, // Optional or custom data
-        loading: {
-            show: true // true or false
-        },
-        params: {}, // Optional or custom params
-        customClass: `table-sm`,
-        pagination: { // optional
-            show: true, // true or false
-            type: `default`, // default or simple
-            customClass: `pagination-sm`
-        },
-        limit: { // optional
-            show: true, // true or false
-            data: [ // array of limit data
-                10,
-                25,
-                50,
-                100
-            ],
-            customClass: `form-select-sm`
-        },
-        search: { // optional
-            show: true, // true or false
-            placeholder: `Search name...`, // optional
-            customClass: `input-group-sm`
-        },
-        columns: [ // required
-            {
-                data: "name"
-            },
-            {
-                data: "gender"
-            },
-            {
-                data: "position"
-            },
-            {
-                data: "phone", // initialize key of API
-                html: e => { // custom output
-                    return `+${ e.phone }`
-                }
-            },
-            {
-                data: "address"
-            },
-            {
-                data: "email"
-            },
-            {
-                data: null,
-                sort: false, // optional, true or false
-                html: e => {
-                    return `
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                        <button type="button" class="btn btn-danger btn-sm">Hapus</button>
-                    </div>
-                    `
-                }
-            }
-        ]
-    })
+    // laravel_table.run("table", {
+    //     url: `employee?page=1`,
+    //     method:`GET`, // Optional, defualt = GET
+    //     headers: { // Optional or custom headers
+    //         "Accept": "application/json"
+    //     },
+    //     data: {}, // Optional or custom data
+    //     loading: {
+    //         show: true // true or false
+    //     },
+    //     params: {}, // Optional or custom params
+    //     customClass: `table-sm`,
+    //     pagination: { // optional
+    //         show: true, // true or false
+    //         type: `default`, // default or simple
+    //         customClass: `pagination-sm`
+    //     },
+    //     limit: { // optional
+    //         show: true, // true or false
+    //         data: [ // array of limit data
+    //             10,
+    //             25,
+    //             50,
+    //             100
+    //         ],
+    //         customClass: `form-select-sm`
+    //     },
+    //     search: { // optional
+    //         show: true, // true or false
+    //         placeholder: `Search name...`, // optional
+    //         customClass: `input-group-sm`
+    //     },
+    //     columns: [ // required
+    //         {
+    //             data: "name"
+    //         },
+    //         {
+    //             data: "gender"
+    //         },
+    //         {
+    //             data: "position"
+    //         },
+    //         {
+    //             data: "phone", // initialize key of API
+    //             html: e => { // custom output
+    //                 return `+${ e.phone }`
+    //             }
+    //         },
+    //         {
+    //             data: "address"
+    //         },
+    //         {
+    //             data: "email"
+    //         },
+    //         {
+    //             data: null,
+    //             sort: false, // optional, true or false
+    //             html: e => {
+    //                 return `
+    //                 <div class="btn-group">
+    //                     <button type="button" class="btn btn-primary btn-sm">Edit</button>
+    //                     <button type="button" class="btn btn-danger btn-sm">Hapus</button>
+    //                 </div>
+    //                 `
+    //             }
+    //         }
+    //     ]
+    // })
 
-    $(document).on(`submit`, `form.submit-filter`, function(e) {
-        e.preventDefault()
+    // $(document).on(`submit`, `form.submit-filter`, function(e) {
+    //     e.preventDefault()
 
-        let form = $(this).serializeArray()
+    //     let form = $(this).serializeArray()
 
-        let newParams = []
+    //     let newParams = []
 
-        $.each(form, function (index, value) {
-            newParams[value.name] = value.value
-        })
+    //     $.each(form, function (index, value) {
+    //         newParams[value.name] = value.value
+    //     })
 
-        laravel_table.setParams(newParams)
+    //     laravel_table.setParams(newParams)
 
-        laravel_table.refresh()
-    })
+    //     laravel_table.refresh()
+    // })
 
-    $(document).on(`click`, `form.submit-filter button[type=button]`, function() {
-        let form = $(`form.submit-filter`).serializeArray()
+    // $(document).on(`click`, `form.submit-filter button[type=button]`, function() {
+    //     let form = $(`form.submit-filter`).serializeArray()
 
-        let newParams = []
+    //     let newParams = []
 
-        $.each(form, function (index, value) {
-            $(`form.submit-filter select[name="${ value.name }"]`).val(``).trigger(`change`)
-            $(`form.submit-filter input[name="${ value.name }"]`).val(``)
-            newParams[value.name] = ``
-        })
+    //     $.each(form, function (index, value) {
+    //         $(`form.submit-filter select[name="${ value.name }"]`).val(``).trigger(`change`)
+    //         $(`form.submit-filter input[name="${ value.name }"]`).val(``)
+    //         newParams[value.name] = ``
+    //     })
 
-        laravel_table.setParams(newParams)
+    //     laravel_table.setParams(newParams)
 
-        laravel_table.refresh()
+    //     laravel_table.refresh()
 
-        $(`form.submit-filter button[type=submit]`).trigger(`click`)
-    })
+    //     $(`form.submit-filter button[type=submit]`).trigger(`click`)
+    // })
+
+    // new Laravel_table(`table`, {
+    //     baseUrl: `http://localhost:8000/api/`,
+    //     url: `employee?page=1`,
+    //     method:`GET`, // Optional, defualt = GET
+    //     headers: { // Optional or custom headers
+    //         "Accept": "application/json"
+    //     },
+    //     data: {}, // Optional or custom data
+    //     loading: {
+    //         show: true // true or false
+    //     },
+    //     params: {}, // Optional or custom params
+    //     customClass: `table-sm`,
+    //     pagination: { // optional
+    //         show: true, // true or false
+    //         type: `default`, // default or simple
+    //         customClass: `pagination-sm`
+    //     },
+    //     limit: { // optional
+    //         show: true, // true or false
+    //         data: [ // array of limit data
+    //             10,
+    //             25,
+    //             50,
+    //             100
+    //         ],
+    //         customClass: `form-select-sm`
+    //     },
+    //     search: { // optional
+    //         show: true, // true or false
+    //         placeholder: `Search name...`, // optional
+    //         customClass: `input-group-sm`
+    //     },
+    //     columns: [ // required
+    //         {
+    //             data: "name"
+    //         },
+    //         {
+    //             data: "gender"
+    //         },
+    //         {
+    //             data: "position"
+    //         },
+    //         {
+    //             data: "phone", // initialize key of API
+    //             html: e => { // custom output
+    //                 return `+${ e.phone }`
+    //             }
+    //         },
+    //         {
+    //             data: "address"
+    //         },
+    //         {
+    //             data: "email"
+    //         },
+    //         {
+    //             data: null,
+    //             sort: false, // optional, true or false
+    //             html: e => {
+    //                 return `
+    //                 <div class="btn-group">
+    //                     <button type="button" class="btn btn-primary btn-sm">Edit</button>
+    //                     <button type="button" class="btn btn-danger btn-sm">Hapus</button>
+    //                 </div>
+    //                 `
+    //             }
+    //         }
+    //     ]
+    // })
+
+    //     (function ( factory ) {
+    //         "use strict"
+
+    //         $.fn.extend({
+    //             myfunction: function(text) {
+    //                 $(this).html(`<button type="button" class="btn btn-primary btn-sm">Click me!</button>`)
+
+    //                 $.each(this[0].children, function (index, value) {
+    //                     $(value).on(`click`, function(e) {
+    //                         $(e).test(text)
+    //                     })
+    //                 });
+
+    //                 return this
+    //             },
+    //             test: (text) =>  {
+    //                 alert(text)
+    //                 return this
+    //             },
+    //             log: () => {
+    //                 console.log(`success`)
+    //                 return this
+    //             }
+    //         })
+    //     }( jQuery ))
+
+    // $(`div#test`).myfunction(`Hallo world!`)
+    // $(`div#test2`).myfunction(`Hallo bro!`).log()
+
+    $(`table#employee`).laravelTable()
     </script>
 </body>
 </html>
