@@ -115,8 +115,8 @@
                 method: options.method,
                 headers: options.headers,
                 data: {
-                    ...options.data,
                     limit: limit ? limit : options.limit.data[0],
+                    ...options.data,
                     ...customRequest.data
                 },
                 xhrFields: {
