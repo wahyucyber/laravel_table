@@ -8,79 +8,47 @@
     $.fn.extend({
         laravelTable: function( customOptions = {} ) {
             options = {
-                url: baseURL + `employee?page=1`,
-                method:`GET`, // Optional, defualt = GET
+                url: customOptions.url,
+                method: customOptions.method ? customOptions.method : `GET`, // Optional, defualt = GET
                 headers: { // Optional or custom headers
                     "Accept": "application/json",
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    ...customOptions.headers
                 },
-                data: {}, // Optional or custom data
+                customClass: customOptions.customClass ? customOptions.customClass : ``,
+                data: customOptions.data ? customOptions.data : {}, // Optional or custom data
                 loading: {
-                    show: true // true or false
+                    show: customOptions.loading && customOptions.loading.show ? customOptions.loading.show : true // true or false
                 },
-                customClass: `table-sm`,
+                customClass: customOptions.customClass ? customOptions.customClass : ``,
                 pagination: { // optional
-                    show: true, // true or false
-                    type: `default`, // default or simple
-                    customClass: `pagination-sm`
+                    show: customOptions.pagination && customOptions.pagination.show ? customOptions.pagination.show : true, // true or false
+                    type: customOptions.pagination && customOptions.pagination.type ? customOptions.pagination.type : `default`, // default or simple
+                    customClass: customOptions.pagination && customOptions.pagination.customClass ? customOptions.pagination.customClass : ``
                 },
                 limit: { // optional
-                    show: true, // true or false
-                    data: [ // array of limit data
+                    show: customOptions.limit && customOptions.limit.show ? customOptions.limit.show : true, // true or false
+                    data: customOptions.limit && customOptions.limit.data ? customOptions.limit.data : [ // array of limit data
                         10,
                         25,
                         50,
                         100
                     ],
-                    customClass: `form-select-sm`
+                    customClass: customOptions.limit && customOptions.limit.customClass ? customOptions.limit.customClass : ``
                 },
                 search: { // optional
-                    show: true, // true or false
-                    placeholder: `Search name...`, // optional
-                    customClass: `input-group-sm`
+                    show: customOptions.search && customOptions.search.show ? customOptions.search.true : true, // true or false
+                    placeholder: customOptions.search && customOptions.search.placeholder ? customOptions.search.placeholder : ``, // optional
+                    customClass: customOptions.search && customOptions.search.customClass ? customOptions.search.customClass : ``
                 },
-                columns: [ // required
-                    {
-                        data: "name"
-                    },
-                    {
-                        data: "gender"
-                    },
-                    {
-                        data: "position"
-                    },
-                    {
-                        data: "phone", // initialize key of API
-                        html: e => { // custom output
-                            return `+${ e.phone }`
-                        }
-                    },
-                    {
-                        data: "address"
-                    },
-                    {
-                        data: "email"
-                    },
-                    {
-                        data: null,
-                        sort: false, // optional, true or false
-                        html: e => {
-                            return `
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                                <button type="button" class="btn btn-danger btn-sm">Hapus</button>
-                            </div>
-                            `
-                        }
-                    }
-                ]
+                columns: customOptions.columns
             }
 
             table = `table#${ $(this).attr(`id`) }`
             elementId = $(this).attr(`id`)
             responsiveElement = $($(this).parent())
 
-            $(this).addClass(`laravel-table`)
+            $(this).addClass(`laravel-table ${ options.customClass }`)
 
             responsiveElement.addClass(`laravel-table_responsive`).attr(`id`, `${ elementId }-laravel-table_responsive`)
 
@@ -134,8 +102,7 @@
                 </div>
             `)
 
-            this._API()
-            this._Func()
+            this._API()._Func()
 
             return this
         },
@@ -185,13 +152,13 @@
                         td = ``
                         $.each(options.columns, function (indexColumns, valueColumns) {
                             if (valueColumns.html) {
-                                td += `<td>${ valueColumns.html(value) }</td>`
+                                td += `<td key="${ indexColumns }">${ valueColumns.html(value) }</td>`
                             }else {
-                                td += `<td>${ eval(`value.` + valueColumns.data) }</td>`
+                                td += `<td key="${ indexColumns }">${ eval(`value.` + valueColumns.data) }</td>`
                             }
                         })
 
-                        tr += `<tr>${ td }</tr>`
+                        tr += `<tr key="${ index }">${ td }</tr>`
                     })
 
                     $(`${ table } tbody`).html(tr)
@@ -245,6 +212,8 @@
                     $(`#${ elementId }-laravel-table_responsive .laravel-table_loading`).remove()
                 }
             })
+
+            return this
         },
         _Func: function() {
             $(document).on(`change`, `#${ elementId }-laravel-table_filter .laravel-table_limit`, function() {
@@ -299,6 +268,47 @@
                     })
                 }
             })
+
+            $(document).on(`click`, `table#${ elementId } thead tr th[data-sort][data-index]:not([colspan])`, function(e) {
+                let columns = options.columns
+                let params = options.data
+
+                console.log(params)
+
+                let sort = columns[$(this).data(`index`)]['data']
+
+                let sort_old = params.sort ? params.sort : ``
+                let dir = params.dir ? params.dir : `ASC`
+
+                if (sort_old == sort) {
+                    dir = dir == `DESC` ? `ASC` : `DESC`
+                }else {
+                    dir = `ASC`
+                }
+
+                $(`table#${ elementId } thead tr th i.bi-caret-up-fill`).removeClass(`bi-caret-up-fill`).addClass(`bi-caret-up`)
+                $(`table#${ elementId } thead tr th i.bi-caret-down-fill`).removeClass(`bi-caret-down-fill`).addClass(`bi-caret-down`)
+
+                if (dir == 'ASC') {
+                    $(`table#${ elementId } thead tr th[data-index='${ $(this).data('index') }'] i.bi-caret-up`).removeClass(`bi-caret-up`).addClass(`bi-caret-up-fill`)
+                }else {
+                    $(`table#${ elementId } thead tr th[data-index='${ $(this).data('index') }'] i.bi-caret-down`).removeClass(`bi-caret-down`).addClass(`bi-caret-down-fill`)
+                }
+
+                options.data = {
+                    sort: sort,
+                    dir: dir
+                }
+
+                $(this)._API({
+                    data: {
+                        sort: sort,
+                        dir: dir
+                    }
+                })
+            })
+
+            return this
         }
     })
 } ( jQuery ))
