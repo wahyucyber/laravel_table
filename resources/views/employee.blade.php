@@ -53,8 +53,8 @@
                                 </div>
                                 <div class="col-lg-3 mt-2">
                                     <div class="btn-group">
-                                        <button type="submit" class="btn btn-success btn-filter_submit"><i class="bi bi-filter"></i> Filter</button>
-                                        <button type="button" class="btn btn-warning btn-filter_reset"><i class="bi bi-x"></i> Reset</button>
+                                        <button type="submit" class="btn btn-success" id="btn-filter_submit"><i class="bi bi-filter"></i> Filter</button>
+                                        <button type="button" class="btn btn-warning" id="btn-filter_reset"><i class="bi bi-x"></i> Reset</button>
                                     </div>
                                 </div>
                             </div>
@@ -110,56 +110,96 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js" integrity="sha512-xIPqqrfvUAc/Cspuj7Bq0UtHNo/5qkdyngx6Vwt+tmbvTLDszzXM0G6c91LXmGrRx8KEPulT+AfOOez+TeVylg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script type="text/javascript" src="{{ asset("") }}assets/js/laravel_table.js"></script>
     <script type="text/javascript">
-    var baseURL = `http://localhost:8000/api/`
+    class dataTable {
+        constructor() {
+            this.baseURL = `http://localhost:8000/api/`
+            this.employee
 
-    $(`table#employee`).laravelTable({
-        url: `${ baseURL }employee`,
-        customClass: `table-sm`,
-        limit: {
-            customClass: `form-select-sm`
-        },
-        search: {
-            placeholder: `Search name...`,
-            customClass: `input-group-sm`
-        },
-        pagination: {
-            customClass: `pagination-sm`
-        },
-        columns: [
-            {
-                data: "name"
-            },
-            {
-                data: "gender"
-            },
-            {
-                data: "position"
-            },
-            {
-                data: "phone",
-                html: e => {
-                    return `${ (`${e.phone}`).replace(`62`, `( +62 ) `) }`
-                }
-            },
-            {
-                data: "address"
-            },
-            {
-                data: "email"
-            },
-            {
-                data: null,
-                sort: false,
-                html: e => {
-                    return `
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary btn-sm">Edit</button>
-                            <button type="button" class="btn btn-danger btn-sm">Hapus</button>
-                        </div>
-                    `
-                }
-            }
-        ]
+            this.getEmployee()
+        }
+
+        getEmployee() {
+            this.employee = $(`table#employee`).laravelTable({
+                url: `${ this.baseURL }employee`,
+                customClass: `table-sm`,
+                limit: {
+                    customClass: `form-select-sm`
+                },
+                search: {
+                    placeholder: `Search name...`,
+                    customClass: `input-group-sm`
+                },
+                pagination: {
+                    customClass: `pagination-sm`
+                },
+                columns: [
+                    {
+                        data: "name"
+                    },
+                    {
+                        data: "gender"
+                    },
+                    {
+                        data: "position"
+                    },
+                    {
+                        data: "phone",
+                        html: e => {
+                            return `${ (`${e.phone}`).replace(`62`, `( +62 ) `) }`
+                        }
+                    },
+                    {
+                        data: "address"
+                    },
+                    {
+                        data: "email"
+                    },
+                    {
+                        data: null,
+                        sort: false,
+                        html: e => {
+                            return `
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary btn-sm">Edit</button>
+                                    <button type="button" class="btn btn-danger btn-sm">Hapus</button>
+                                </div>
+                            `
+                        }
+                    }
+                ]
+            })
+        }
+
+        filterEmployee(e) {
+            e.preventDefault()
+
+            let form = $(`form.submit-filter`).serializeArray()
+
+            let formData = {}
+
+            $.each(form, function (index, value) {
+                formData[value.name] = value.value
+            })
+
+            this.employee.refresh(formData)
+        }
+
+        resetFilterEmployee() {
+            $(`form.submit-filter input`).val(``)
+            $(`form.submit-filter select`).val(``).trigger(`change`)
+
+            this.employee.refresh({})
+        }
+    }
+
+    let datatable = new dataTable
+
+    $(document).on(`submit`, `form.submit-filter`, function(e) {
+        datatable.filterEmployee(e)
+    })
+
+    $(document).on("click", "form.submit-filter button#btn-filter_reset", function() {
+        datatable.resetFilterEmployee()
     })
     </script>
 </body>

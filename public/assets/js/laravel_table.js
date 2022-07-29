@@ -106,6 +106,7 @@
 
             return this
         },
+
         _API: function(customRequest = {}) {
             let limit = $(`#${ elementId }-laravel-table_filter .laravel-table_limit`).val()
 
@@ -215,6 +216,7 @@
 
             return this
         },
+
         _Func: function() {
             $(document).on(`change`, `#${ elementId }-laravel-table_filter .laravel-table_limit`, function() {
                 $(this)._API({
@@ -309,6 +311,12 @@
             })
 
             return this
+        },
+
+        refresh: function(data = {}) {
+            $(this)._API({
+                data: data
+            })
         }
     })
 } ( jQuery ))
