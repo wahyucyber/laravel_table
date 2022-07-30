@@ -59,7 +59,7 @@
                     </div>
                 </form>
             </div>
-            <div class="col-lg-12">
+            <div class="col-lg-12 mb-3">
                 <div class="card">
                     <div class="card-body">
                         <div class="row">
@@ -102,6 +102,38 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="table-responsive">
+                                    <table class="table table-striped table-condensed table-borderless" id="tasks">
+                                        <thead>
+                                            <tr>
+                                                <th>Employee</th>
+                                                <th>Name</th>
+                                                <th>Description</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th>Employee</th>
+                                                <th>Name</th>
+                                                <th>Description</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -119,15 +151,17 @@
             this.employee
 
             this.getEmployee()
+            this.getTasks()
         }
 
-        getEmployee() {
+        getEmployee(data = {}) {
             this.employee = $(`table#employee`).laravelTable({
                 url: `${ this.baseURL }employee`,
                 customClass: `table-sm`,
                 limit: {
                     customClass: `form-select-sm`
                 },
+                data: data,
                 search: {
                     placeholder: `Search name...`,
                     customClass: `input-group-sm`
@@ -184,14 +218,43 @@
                 formData[value.name] = value.value
             })
 
-            this.employee.refresh(formData)
+            datatable.getEmployee(formData)
         }
 
         resetFilterEmployee() {
             $(`form.submit-filter input`).val(``)
             $(`form.submit-filter select`).val(``).trigger(`change`)
 
-            this.employee.refresh()
+            datatable.getEmployee()
+        }
+
+        getTasks() {
+            $(`table#tasks`).laravelTable({
+                url: `${ this.baseURL }task`,
+                columns: [
+                    {
+                        data: `employee.name`
+                    },
+                    {
+                        data: `name`
+                    },
+                    {
+                        data: `description`
+                    },
+                    {
+                        data: null,
+                        sort: false,
+                        html: e => {
+                            return `
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary btn-sm">Edit</button>
+                                    <button type="button" class="btn btn-danger btn-sm">Hapus</button>
+                                </div>
+                            `
+                        }
+                    }
+                ]
+            })
         }
     }
 

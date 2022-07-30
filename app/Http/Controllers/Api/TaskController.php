@@ -17,20 +17,31 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $employee_id = $request->employee_id;
-        $name = $request->name;
+        $limit = $request->limit;
 
-        $tasks = Task::latest()->with("employee");
+        $sort = $request->sort;
+        $dir = $request->dir;
+
+        $employee_id = $request->employee_id;
+        $name = $request->search;
+
+        $tasks = Task::with("employee");
 
         if ($employee_id) {
             $tasks->where("employee_id", $employee_id);
         }
 
         if ($name) {
-            $tasks->where("name", "%$name%");
+            $tasks->where("name", "LIKE", "%$name%");
         }
 
-        return Response::json($tasks);
+        if ($sort && $dir) {
+            $tasks->orderBy($sort, $dir);
+        }else {
+            $tasks->latest();
+        }
+
+        return Response::json($tasks->paginate($limit));
     }
 
     /**
