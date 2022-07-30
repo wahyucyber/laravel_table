@@ -191,7 +191,7 @@
             $(`form.submit-filter input`).val(``)
             $(`form.submit-filter select`).val(``).trigger(`change`)
 
-            this.employee.refresh({})
+            this.employee.refresh()
         }
     }
 
