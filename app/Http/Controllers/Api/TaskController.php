@@ -45,7 +45,7 @@ class TaskController extends Controller
             "employee_id" => "required|exists:employees,id",
             "name" => "required|max:255",
             "description" => "nullable",
-            "done" => "nullable|in:true,false"
+            "done" => "nullable|in:1,0"
         ]);
 
         if ($validation->fails()) {
@@ -101,7 +101,7 @@ class TaskController extends Controller
             "employee_id" => "required|exists:employees,id",
             "name" => "required|max:255",
             "description" => "nullable",
-            "done" => "nullable|in:true,false"
+            "done" => "nullable|in:1,0"
         ]);
 
         $task = Task::where("id", $id)->first();
