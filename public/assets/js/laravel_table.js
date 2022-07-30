@@ -116,6 +116,7 @@
                 headers: options.headers,
                 data: {
                     limit: limit ? limit : options.limit.data[0],
+                    search: $(`#${ elementId }-laravel-table_filter form.laravel-table_search input`).val(),
                     ...options.data,
                     ...customRequest.data
                 },
@@ -274,8 +275,6 @@
             $(document).on(`click`, `table#${ elementId } thead tr th[data-sort][data-index]:not([colspan])`, function(e) {
                 let columns = options.columns
                 let params = options.data
-
-                console.log(params)
 
                 let sort = columns[$(this).data(`index`)]['data']
 
