@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\EmployeeController;
+use App\Http\Controllers\Api\TaskController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,4 +23,14 @@ Route::group([
     Route::post("/store", [EmployeeController::class, "store"]);
     Route::put("/{id}/update", [EmployeeController::class, "update"]);
     Route::delete("/{id}/destroy", [EmployeeController::class, "destroy"]);
+});
+
+Route::group([
+    "prefix" => "task"
+], function() {
+    Route::get("/", [TaskController::class, "index"]);
+    Route::post("/store", [TaskController::class, "store"]);
+    Route::get("/{id}/show", [TaskController::class, "show"]);
+    Route::put("/{id}/update", [TaskController::class, "update"]);
+    Route::delete("/{id}/destroy", [TaskController::class, "destroy"]);
 });
