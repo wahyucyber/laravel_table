@@ -2,12 +2,17 @@
 
     let elementId,
         responsiveElement,
-        defaultOptions
+        defaultOptions,
+        globalOptions = []
 
     $.fn.extend({
         laravelTable: function( customOptions = {} ) {
-            defaultOptions = {
-                url: customOptions.url,
+            table = `table#${ $(this).attr(`id`) }`
+            elementId = $(this).attr(`id`)
+            responsiveElement = $($(this).parent())
+
+            globalOptions[elementId] = {
+                url: customOptions.url ? customOptions.url : ``,
                 method: customOptions.method ? customOptions.method : `GET`, // Optional, defualt = GET
                 headers: { // Optional or custom headers
                     "Accept": "application/json",
@@ -19,7 +24,6 @@
                 loading: {
                     show: customOptions.loading && customOptions.loading.show ? customOptions.loading.show : true // true or false
                 },
-                customClass: customOptions.customClass ? customOptions.customClass : ``,
                 pagination: { // optional
                     show: customOptions.pagination && customOptions.pagination.show ? customOptions.pagination.show : true, // true or false
                     type: customOptions.pagination && customOptions.pagination.type ? customOptions.pagination.type : `default`, // default or simple
@@ -36,17 +40,14 @@
                     customClass: customOptions.limit && customOptions.limit.customClass ? customOptions.limit.customClass : ``
                 },
                 search: { // optional
-                    show: customOptions.search && customOptions.search.show ? customOptions.search.true : true, // true or false
+                    show: customOptions.search && customOptions.search.show ? customOptions.search.show : true, // true or false
                     placeholder: customOptions.search && customOptions.search.placeholder ? customOptions.search.placeholder : ``, // optional
                     customClass: customOptions.search && customOptions.search.customClass ? customOptions.search.customClass : ``
                 },
-                columns: customOptions.columns
+                columns: customOptions.columns ? customOptions.columns : []
             }
-        // })
 
-            table = `table#${ $(this).attr(`id`) }`
-            elementId = $(this).attr(`id`)
-            responsiveElement = $($(this).parent())
+            defaultOptions = globalOptions[elementId]
 
             $(this).addClass(`laravel-table ${ defaultOptions.customClass }`)
 
@@ -104,27 +105,30 @@
                 </div>
             `)
 
-            $(this)._API(defaultOptions)
-            $(this)._Func(defaultOptions)
+            $(this)._API()._Func()
 
             return this
         },
 
-        _API: function(options, customRequest = {}) {
+        _API: function(customRequest = {}) {
             let element = this[0].id
 
             let limit = $(`#${ element }-laravel-table_filter .laravel-table_limit`).val()
+
+            globalOptions[element]['data'] = {
+                ...globalOptions[element].data,
+                limit: limit ? limit : options.limit.data[0],
+                search: $(`#${ element }-laravel-table_filter form.laravel-table_search input`).val(),
+                ...customRequest.data
+            }
+
+            let options = globalOptions[element]
 
             $.ajax({
                 url: customRequest.url ? customRequest.url : options.url,
                 method: options.method,
                 headers: options.headers,
-                data: {
-                    limit: limit ? limit : options.limit.data[0],
-                    search: $(`#${ elementId }-laravel-table_filter form.laravel-table_search input`).val(),
-                    ...options.data,
-                    ...customRequest.data
-                },
+                data: options.data,
                 xhrFields: {
                     withCredentials: true
                 },
@@ -169,39 +173,39 @@
                     })
 
                     $(`table#${ element } tbody`).html(tr)
+                }
 
-                    let paginationItem = ``
+                let paginationItem = ``
 
-                    if (options.pagination.type == "default") {
-                        $.each(links, function (index, value) {
-                            paginationItem += `<li class="page-item default ${ value.active ? `active` : `` } ${ value.url == null ? `disabled` : `` }" data-disabled="${ value.url == null ? `true` : `` }" data-active="${ value.active ? `true` : `false` }" data-url="${ value.url }"><a class="page-link" href="javascript:;">${ value.label }</a></li>`
-                        })
-                    }else if(options.pagination.type == "simple") {
-                        paginationItem = `
-                            <li class="page-item simple ${ data.current_page == 1 ? `disabled` : `` }" data-disabled="${ data.current_page == 1 ? `true` : `` }" data-url="${ data.first_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-rewind"></i></a></li>
-                            <li class="page-item simple ${ data.current_page == 1 ? `disabled` : `` }" data-disabled="${ data.current_page == 1 ? `true` : `` }" data-url="${ data.prev_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-caret-left"></i></a></li>
-                            <li class="page-item active"><a class="page-link" href="javascript:;">${ data.current_page }</a></li>
-                            <li class="page-item simple ${ data.last_page == data.current_page ? `disabled` : `` }" data-disabled="${ data.last_page == data.current_page ? `true` : `` }" data-url="${ data.next_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-caret-right"></i></a></li>
-                            <li class="page-item simple ${ data.last_page == data.current_page ? `disabled` : `` }" data-disabled="${ data.last_page == data.current_page ? `true` : `` }" data-url="${ data.last_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-fast-forward"></i></a></li>
-                        `
-                    }
+                if (options.pagination.type == "default") {
+                    $.each(links, function (index, value) {
+                        paginationItem += `<li class="page-item default ${ value.active ? `active` : `` } ${ value.url == null ? `disabled` : `` }" data-disabled="${ value.url == null ? `true` : `` }" data-active="${ value.active ? `true` : `false` }" data-url="${ value.url }"><a class="page-link" href="javascript:;">${ value.label }</a></li>`
+                    })
+                }else if(options.pagination.type == "simple") {
+                    paginationItem = `
+                        <li class="page-item simple ${ data.current_page == 1 ? `disabled` : `` }" data-disabled="${ data.current_page == 1 ? `true` : `` }" data-url="${ data.first_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-rewind"></i></a></li>
+                        <li class="page-item simple ${ data.current_page == 1 ? `disabled` : `` }" data-disabled="${ data.current_page == 1 ? `true` : `` }" data-url="${ data.prev_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-caret-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="javascript:;">${ data.current_page }</a></li>
+                        <li class="page-item simple ${ data.last_page == data.current_page ? `disabled` : `` }" data-disabled="${ data.last_page == data.current_page ? `true` : `` }" data-url="${ data.next_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-caret-right"></i></a></li>
+                        <li class="page-item simple ${ data.last_page == data.current_page ? `disabled` : `` }" data-disabled="${ data.last_page == data.current_page ? `true` : `` }" data-url="${ data.last_page_url }"><a class="page-link" href="javascript:;"><i class="bi bi-fast-forward"></i></a></li>
+                    `
+                }
 
-                    if (options.pagination.show == true) {
-                        $(`.laravel-table_pagination#${ element }-laravel-table_pagination`).remove()
+                $(`#${ element }-laravel-table_pagination`).remove()
 
-                        $(`table#${ element }`).parent().parent().append(`
-                            <div class="mt-2 d-flex justify-content-between laravel-table_pagination" id="${ element }-laravel-table_pagination">
-                                <nav aria-label="laravel-table_pagination">
-                                    <ul class="pagination ${ options.pagination.customClass }">
-                                        ${ paginationItem }
-                                    </ul>
-                                </nav>
-                                <div class="table-info">
-                                    Showing ${ data.from } to ${ data.total } of ${ data.per_page } per page
-                                </div>
+                if (options.pagination.show == true) {
+                    $(`table#${ element }`).parent().parent().append(`
+                        <div class="mt-2 d-flex justify-content-between laravel-table_pagination" id="${ element }-laravel-table_pagination">
+                            <nav aria-label="laravel-table_pagination">
+                                <ul class="pagination ${ options.pagination.customClass }">
+                                    ${ paginationItem }
+                                </ul>
+                            </nav>
+                            <div class="table-info">
+                                Showing ${ data.from } to ${ data.total } of ${ data.per_page } per page
                             </div>
-                        `)
-                    }
+                        </div>
+                    `)
                 }
             })
             .fail(function(err) {
@@ -223,13 +227,15 @@
             return this
         },
 
-        _Func: function(options) {
+        _Func: function() {
             let element = this[0].id
+
+            let options = globalOptions[element]
 
             let elementObject = this
 
             $(document).on(`change`, `#${ element }-laravel-table_filter .laravel-table_limit`, function() {
-                $(elementObject)._API(options, {
+                $(elementObject)._API({
                     data: {
                         limit: $(this).val()
                     }
@@ -241,7 +247,7 @@
 
                 let search = $(`#${ element }-laravel-table_filter form.laravel-table_search input`).val()
 
-                $(elementObject)._API(options, {
+                $(elementObject)._API({
                     data: {
                         search: search
                     }
@@ -250,7 +256,7 @@
 
             $(document).on(`keyup`, `#${ element }-laravel-table_filter form.laravel-table_search input`, function() {
                 if ($(this).val() == "") {
-                    $(elementObject)._API(options, {
+                    $(elementObject)._API({
                         data: {
                             search: ``
                         }
@@ -264,7 +270,7 @@
                 let disabled = $(this).data('disabled')
 
                 if (active == false && disabled == false) {
-                    $(elementObject)._API(options, {
+                    $(elementObject)._API({
                         url: url
                     })
                 }
@@ -275,7 +281,7 @@
                 let disabled = $(this).data('disabled')
 
                 if (disabled == false) {
-                    $(elementObject)._API(options, {
+                    $(elementObject)._API({
                         url: url
                     })
                 }
@@ -310,12 +316,20 @@
                     dir: dir
                 }
 
-                $(elementObject)._API(options, {
+                $(elementObject)._API({
                     data: {
                         sort: sort,
                         dir: dir
                     }
                 })
+            })
+
+            return this
+        },
+
+        fresh: function(newOptions) {
+            $(this)._API({
+                data: newOptions ? newOptions : {}
             })
         }
     })

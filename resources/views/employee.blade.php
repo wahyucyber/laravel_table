@@ -159,6 +159,7 @@
                 url: `${ this.baseURL }employee`,
                 customClass: `table-sm`,
                 limit: {
+                    data: [1,2,3],
                     customClass: `form-select-sm`
                 },
                 data: data,
@@ -218,14 +219,22 @@
                 formData[value.name] = value.value
             })
 
-            datatable.getEmployee(formData)
+            this.employee.fresh(formData)
         }
 
         resetFilterEmployee() {
             $(`form.submit-filter input`).val(``)
             $(`form.submit-filter select`).val(``).trigger(`change`)
 
-            datatable.getEmployee()
+            let form = $(`form.submit-filter`).serializeArray()
+
+            let formData = {}
+
+            $.each(form, function (index, value) {
+                formData[value.name] = ``
+            })
+
+            this.employee.fresh(formData)
         }
 
         getTasks() {
@@ -233,6 +242,7 @@
                 url: `${ this.baseURL }task`,
                 columns: [
                     {
+                        sort: false,
                         data: `employee.name`
                     },
                     {
