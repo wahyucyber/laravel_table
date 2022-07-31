@@ -154,15 +154,18 @@
             this.getTasks()
         }
 
-        getEmployee(data = {}) {
+        getEmployee() {
             this.employee = $(`table#employee`).laravelTable({
                 url: `${ this.baseURL }employee`,
                 customClass: `table-sm`,
                 limit: {
-                    data: [1,2,3],
+                    data: [
+                        2,
+                        5,
+                        10
+                    ],
                     customClass: `form-select-sm`
                 },
-                data: data,
                 search: {
                     placeholder: `Search name...`,
                     customClass: `input-group-sm`

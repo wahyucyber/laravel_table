@@ -202,7 +202,7 @@
                                 </ul>
                             </nav>
                             <div class="table-info">
-                                Showing ${ data.from != null ? data.from : 0 } to ${ data.total } of ${ data.per_page } per page
+                                Showing ${ data.from != null ? data.from : 0 } to ${ data.last_page } of ${ data.total } entries
                             </div>
                         </div>
                     `)
