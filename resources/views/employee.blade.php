@@ -73,8 +73,6 @@
                                                 <th colspan="3">Other Information</th>
                                             </tr>
                                             <tr>
-                                                {{-- <th>Name</th>
-                                                <th>Gender</th> --}}
                                                 <th>Position</th>
                                                 <th>Phone</th>
                                                 <th>Address</th>
@@ -108,7 +106,7 @@
                         <div class="row">
                             <div class="col-lg-12">
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-condensed table-borderless" id="tasks">
+                                    <table class="table table-striped table-condensed table-bordered table-hover" id="tasks">
                                         <thead>
                                             <tr>
                                                 <th>Employee</th>
