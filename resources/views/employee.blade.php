@@ -157,6 +157,7 @@
                 url: `${ this.baseURL }employee`,
                 customClass: `table-sm`,
                 limit: {
+                    show: "true",
                     data: [
                         2,
                         5,
@@ -165,10 +166,12 @@
                     customClass: `form-select-sm`
                 },
                 search: {
+                    show: "true",
                     placeholder: `Search name...`,
                     customClass: `input-group-sm`
                 },
                 pagination: {
+                    show: "true",
                     customClass: `pagination-sm`
                 },
                 columns: [

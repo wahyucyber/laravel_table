@@ -83,15 +83,15 @@
          *          param3: `nilai3`,
          *      },
          *      loading: {
-         *          show: true
+         *          show: "true"
          *      },
          *      pagination: {
-         *          show: true,
+         *          show: "true",
          *          type: `default`,
          *          customClass: `pagination-sm`
          *      },
          *      limit: {
-         *          show: true,
+         *          show: "true",
          *          data: [
          *              10,
          *              25,
@@ -101,7 +101,7 @@
          *          customClass: `form-select-sm`
          *      },
          *      search: {
-         *          show: true,
+         *          show: "true",
          *          placeholder: `Search column...`,
          *          customClass: `form-control-sm`
          *      },
@@ -419,13 +419,13 @@
              * Didalam variabel limitContent memiliki nilai yaitu element select baru yang digunakan untuk melimit data pada saat memunculkan data pada tabel.
              * Nilai options diambil dari variabel limitContentOption
              */
-            let limitContent = defaultOptions.limit.show == true ? `<select class="form-select laravel-table_limit ${ defaultOptions.limit.customClass }">${ limitContentOption }</select>` : ``
+            let limitContent = defaultOptions.limit.show == true || defaultOptions.limit.show == "true" ? `<select class="form-select laravel-table_limit ${ defaultOptions.limit.customClass }">${ limitContentOption }</select>` : ``
 
             /*
              * Menambahkan variabel baru dengan nama searchForm.
              * Didalam variabel searchForm memiliki nilai yaitu sebuah element form baru yang digunakan untuk request mencari data yang diinput oleh user.
              */
-            let searchForm = defaultOptions.search.show == true ? `
+            let searchForm = defaultOptions.search.show == true || defaultOptions.search.show == "true" ? `
             <form class="laravel-table_search">
                 <div class="form-group">
                     <div class="input-group ${ defaultOptions.search.customClass }">
@@ -474,6 +474,11 @@
             let limit = $(`#${ element }-laravel-table_filter .laravel-table_limit`).val()
 
             /*
+             * Menambahkan variabel options dengan nilai dari variabel globalOptions.
+             */
+            let options = globalOptions[element]
+
+            /*
              * Mengubah nilai data dari parameter globalOptions.
              */
             globalOptions[element]['data'] = {
@@ -507,11 +512,6 @@
             }
 
             /*
-             * Menambahkan variabel options dengan nilai dari variabel globalOptions.
-             */
-            let options = globalOptions[element]
-
-            /*
              * Call ajax jQuery untuk request ke API yang diminta.
              */
             $.ajax({
@@ -528,7 +528,7 @@
                     /*
                      * Mendefinisikan jika parameter loading > show sama dengan true maka menampilkan loading data.
                      */
-                    if (options.loading.show == true) {
+                    if (options.loading.show == true || options.loading.show == "true") {
                         $(`#${ element }-laravel-table_responsive`).append(`
                             <div class="laravel-table_loading">
                                 <img src="./assets/img/loading.gif" alt="Loading image">
@@ -673,7 +673,7 @@
                 /*
                  * Jika parameter pagination > show sama dengan true
                  */
-                if (options.pagination.show == true) {
+                if (options.pagination.show == true || options.pagination.show == "true") {
 
                     /*
                      * Menambahkan element pagination ke html.
@@ -726,7 +726,7 @@
                 /*
                  * Jika parameter loading > show sama dengan true.
                  */
-                if (options.loading.show == true) {
+                if (options.loading.show == true || options.loading.show == "true") {
 
                     /*
                      * Menghapus element html loading.
